@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b58">
+  <meta name="robots" content="noindex, nofollow">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://instrument-booking-api.chhuang-586.workers.dev; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'">
+  <title>預約管理</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="admin-shell header-inner">
+      <a class="brand" href="index.html">
+        <span class="brand-mark" aria-hidden="true">DLS</span>
+        <span>
+          <strong data-i18n="adminTitle">預約管理</strong>
+          <small data-i18n="adminTitleEn">Booking Administration</small>
+        </span>
+      </a>
+      <button id="language-toggle" class="language-toggle" type="button">English</button>
+    </div>
+  </header>
+
+  <main class="admin-shell">
+    <section id="login-panel" class="panel login-card" aria-labelledby="login-title">
+      <div class="section-heading">
+        <div>
+          <p class="step-label">ADMIN</p>
+          <h1 id="login-title" data-i18n="loginTitle">管理員登入</h1>
+        </div>
+      </div>
+      <form id="login-form">
+        <label>
+          <span data-i18n="password">管理密碼</span>
+          <input name="password" type="password" autocomplete="current-password" required>
+        </label>
+        <div id="login-message" class="form-message" role="alert"></div>
+        <button id="login-submit" class="primary-button" type="submit" data-i18n="login">登入</button>
+      </form>
+    </section>
+
+    <section id="admin-panel" class="panel is-hidden" aria-labelledby="records-title">
+      <div class="admin-toolbar">
+        <div>
+          <p class="step-label">DLS</p>
+          <h1 id="records-title" data-i18n="recordsTitle">預約紀錄</h1>
+        </div>
+        <div class="admin-actions">
+          <select id="status-filter" aria-label="Status filter">
+            <option value="all" data-i18n="all">全部</option>
+            <option value="active" data-i18n="active">有效</option>
+            <option value="cancelled" data-i18n="cancelled">已取消</option>
+          </select>
+          <button id="refresh-admin" class="secondary-button" type="button" data-i18n="refresh">重新整理</button>
+          <button id="export-csv" class="secondary-button" type="button" data-i18n="export">匯出 CSV</button>
+          <button id="logout" class="danger-button" type="button" data-i18n="logout">登出</button>
+        </div>
+      </div>
+      <div id="admin-message" class="form-message" role="status"></div>
+      <div class="table-wrap">
+        <table class="admin-table">
+          <thead>
+            <tr>
+              <th data-i18n="bookingCode">預約編號</th>
+              <th data-i18n="time">預約時間</th>
+              <th data-i18n="labManager">實驗室負責人</th>
+              <th data-i18n="operator">操作人</th>
+              <th data-i18n="extension">分機</th>
+              <th data-i18n="notes">備註</th>
+              <th data-i18n="status">狀態</th>
+              <th data-i18n="action">操作</th>
+            </tr>
+          </thead>
+          <tbody id="booking-rows"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="admin.js"></script>
+</body>
+</html>

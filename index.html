@@ -1,0 +1,169 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#123b58">
+  <meta name="description" content="粒徑分析儀（DLS）－Anton Paar 701 線上預約系統">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; connect-src https://instrument-booking-api.chhuang-586.workers.dev; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; form-action 'self'">
+  <title>儀器線上預約系統</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#main" data-i18n="skip">跳至主要內容</a>
+  <header class="site-header">
+    <div class="shell header-inner">
+      <a class="brand" href="./" aria-label="儀器線上預約系統首頁">
+        <span class="brand-mark" aria-hidden="true">DLS</span>
+        <span>
+          <strong data-i18n="siteTitle">儀器線上預約系統</strong>
+          <small data-i18n="siteTitleEn">Instrument Online Booking System</small>
+        </span>
+      </a>
+      <button id="language-toggle" class="language-toggle" type="button" aria-label="Switch language">English</button>
+    </div>
+  </header>
+
+  <main id="main" class="shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" data-i18n="alwaysOpen">全年 24 小時開放預約</p>
+        <h1 id="hero-title">粒徑分析儀（DLS）<span>Anton Paar 701</span></h1>
+        <p data-i18n="rulesSummary">每 30 分鐘一格｜單次最多 3 小時｜可預約未來 14 天</p>
+      </div>
+      <div id="service-status" class="status-pill is-checking" role="status" data-i18n="checking">系統檢查中</div>
+    </section>
+
+    <nav class="section-nav" aria-label="主要功能">
+      <a href="#booking" data-i18n="navBooking">新增預約</a>
+      <a href="#schedule" data-i18n="navSchedule">預約時段</a>
+      <a href="#cancel" data-i18n="navCancel">取消預約</a>
+    </nav>
+
+    <section id="booking" class="panel" aria-labelledby="booking-title">
+      <div class="section-heading">
+        <div>
+          <p class="step-label">01</p>
+          <h2 id="booking-title" data-i18n="bookingTitle">新增預約</h2>
+        </div>
+        <p data-i18n="requiredHint">標示 * 的欄位必填</p>
+      </div>
+
+      <form id="booking-form" novalidate>
+        <div class="form-grid three-columns">
+          <label>
+            <span data-i18n="date">日期 *</span>
+            <input id="booking-date" name="date" type="date" required>
+          </label>
+          <label>
+            <span data-i18n="startTime">開始時間 *</span>
+            <select id="start-time" name="startTime" required></select>
+          </label>
+          <label>
+            <span data-i18n="duration">使用時間 *</span>
+            <select id="duration" name="duration" required>
+              <option value="30">30 分鐘 / min</option>
+              <option value="60">1 小時 / hr</option>
+              <option value="90">1.5 小時 / hr</option>
+              <option value="120">2 小時 / hr</option>
+              <option value="150">2.5 小時 / hr</option>
+              <option value="180">3 小時 / hr</option>
+            </select>
+          </label>
+        </div>
+
+        <p id="time-summary" class="time-summary" aria-live="polite"></p>
+        <p id="conflict-warning" class="inline-alert is-hidden" role="alert"></p>
+
+        <div class="form-grid two-columns">
+          <label>
+            <span data-i18n="labManager">實驗室負責人 *</span>
+            <input name="labManager" type="text" maxlength="100" autocomplete="organization-title" required>
+          </label>
+          <label>
+            <span data-i18n="operator">操作人 *</span>
+            <input name="operatorName" type="text" maxlength="100" autocomplete="name" required>
+          </label>
+          <label>
+            <span data-i18n="extension">分機電話 *</span>
+            <input name="extensionPhone" type="text" maxlength="30" inputmode="tel" autocomplete="tel" required>
+          </label>
+          <label class="wide-field">
+            <span data-i18n="notes">備註</span>
+            <textarea name="notes" rows="3" maxlength="1000"></textarea>
+          </label>
+        </div>
+
+        <label class="honeypot" aria-hidden="true">
+          Website
+          <input name="website" type="text" tabindex="-1" autocomplete="off">
+        </label>
+
+        <div id="booking-message" class="form-message" role="status" aria-live="polite"></div>
+        <button id="booking-submit" class="primary-button" type="submit" data-i18n="submitBooking">確認預約</button>
+      </form>
+    </section>
+
+    <section id="schedule" class="panel" aria-labelledby="schedule-title">
+      <div class="section-heading">
+        <div>
+          <p class="step-label">02</p>
+          <h2 id="schedule-title" data-i18n="scheduleTitle">未來 14 天預約時段</h2>
+        </div>
+        <button id="refresh-schedule" class="text-button" type="button" data-i18n="refresh">重新整理</button>
+      </div>
+      <p class="privacy-note" data-i18n="publicFields">公開顯示時間、實驗室負責人及操作人；分機與備註不公開。</p>
+      <div id="schedule-loading" class="empty-state" data-i18n="loading">讀取中…</div>
+      <div id="schedule-grid" class="schedule-grid" aria-live="polite"></div>
+    </section>
+
+    <section id="cancel" class="panel compact-panel" aria-labelledby="cancel-title">
+      <div class="section-heading">
+        <div>
+          <p class="step-label">03</p>
+          <h2 id="cancel-title" data-i18n="cancelTitle">取消預約</h2>
+        </div>
+      </div>
+      <p data-i18n="cancelRule">開始時間前可自行取消；開始時間到達後請聯絡管理員。</p>
+      <form id="cancel-form" class="form-grid two-columns" novalidate>
+        <label>
+          <span data-i18n="bookingCode">預約編號 *</span>
+          <input name="bookingCode" type="text" maxlength="40" autocomplete="off" required>
+        </label>
+        <label>
+          <span data-i18n="cancelCode">取消碼 *</span>
+          <input name="cancelCode" type="text" maxlength="12" autocomplete="off" required>
+        </label>
+        <div id="cancel-message" class="form-message wide-field" role="status" aria-live="polite"></div>
+        <button id="cancel-submit" class="danger-button" type="submit" data-i18n="submitCancel">確認取消</button>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="shell footer-inner">
+      <span data-i18n="footerText">DLS 儀器預約管理</span>
+      <a href="admin.html" data-i18n="adminLink">管理員登入</a>
+    </div>
+  </footer>
+
+  <dialog id="receipt-dialog" class="receipt-dialog">
+    <div class="receipt-icon" aria-hidden="true">✓</div>
+    <h2 data-i18n="successTitle">預約成功</h2>
+    <p data-i18n="saveCodes">請立即保存以下資料，取消預約時需要同時輸入。</p>
+    <dl class="receipt-codes">
+      <div><dt data-i18n="bookingCodePlain">預約編號</dt><dd id="receipt-booking-code"></dd></div>
+      <div><dt data-i18n="cancelCodePlain">取消碼</dt><dd id="receipt-cancel-code"></dd></div>
+    </dl>
+    <p id="receipt-time" class="receipt-time"></p>
+    <div class="dialog-actions">
+      <button id="copy-receipt" class="secondary-button" type="button" data-i18n="copyCodes">複製資料</button>
+      <button id="close-receipt" class="primary-button" type="button" data-i18n="done">完成</button>
+    </div>
+  </dialog>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
