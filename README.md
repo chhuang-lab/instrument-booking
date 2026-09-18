@@ -19,3 +19,4 @@
 - Cloudflare D1：預約資料庫
 
 正式部署與維護方式請見 [DEPLOYMENT.md](DEPLOYMENT.md)。
+<!-- Trigger Cloudflare deployment -->
