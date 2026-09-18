@@ -304,12 +304,13 @@ async function exportCsv(request, env) {
   ).all();
 
   const headers = [
-    "booking_code", "instrument", "start_at", "end_at", "lab_manager",
+    "booking_code", "instrument", "start_at", "end_at", "duration_minutes", "lab_manager",
     "operator", "extension_phone", "notes", "status", "created_at",
     "cancelled_at", "cancelled_by",
   ];
   const rows = [headers, ...results.map((row) => [
     row.booking_code, row.instrument_name, row.start_at, row.end_at,
+    Math.round((Date.parse(row.end_at) - Date.parse(row.start_at)) / 60000),
     row.lab_manager, row.operator_name, row.extension_phone, row.notes || "",
     row.status, row.created_at, row.cancelled_at || "", row.cancelled_by || "",
   ])];
